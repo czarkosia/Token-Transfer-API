@@ -1,8 +1,9 @@
 package db
 
 import (
-	"database/sql"
 	"log"
+
+	"token-transfer-api/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -11,18 +12,20 @@ import (
 var DB *gorm.DB
 
 func DBconnect() {
-	sqlDB, err := sql.Open("pgx", "mydb_dsn")
-	gormDB, err := gorm.Open(postgres.New(postgres.Config{
-		Conn: sqlDB,
-	}), &gorm.Config{})
+	dsn := "host=postgres user=btp password=btp dbname=btp_db port=5432 sslmode=disable TimeZone=Europe/Warsaw"
+	gormDB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		log.Fatalf("failed to connect database: %v", err)
 	}
-
 	DB = gormDB
+	DB.AutoMigrate(&models.Wallet{})
+
+	var count int64
+	if err := DB.Model(&models.Wallet{}).Where("address = ?", "0x0000000000000000000000000000000000000000").Count(&count).Error; err != nil {
+		log.Fatalf("%v", err)
+	}
+	if count == 0 {
+		DB.Create(&models.Wallet{Address: "0x0000000000000000000000000000000000000000", Balance: 1000000})
+	}
 }
-
-// func migrate() {
-
-// }
