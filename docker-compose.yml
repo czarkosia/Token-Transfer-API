@@ -1,0 +1,22 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: btp
+      DB_PASSWORD: btp
+      DB_NAME: btp_db
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: btp
+      POSTGRES_PASSWORD: btp
+      POSTGRES_DB: btp_db

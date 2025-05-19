@@ -6,7 +6,6 @@ import (
 	"os"
 	"token-transfer-api/db"
 	"token-transfer-api/graph"
-	"token-transfer-api/models"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
@@ -25,7 +24,6 @@ func main() {
 	}
 
 	db.DBconnect()
-	db.DB.AutoMigrate(&models.Wallet{})
 
 	srv := handler.New(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
 
