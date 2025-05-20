@@ -15,8 +15,8 @@ func TestSuccessfulTransfer(t *testing.T) {
 	from_address := "0xtransfertestfrom123"
 	to_address := "0xtransfertestto321"
 
-	// assert.Error(t, db.DB.Where("address = ?", from_address).First(&models.Wallet{}).Error)
-	// assert.Error(t, db.DB.Where("address = ?", to_address).First(&models.Wallet{}).Error)
+	assert.Error(t, db.DB.Where("address = ?", from_address).First(&models.Wallet{}).Error)
+	assert.Error(t, db.DB.Where("address = ?", to_address).First(&models.Wallet{}).Error)
 
 	from_wallet := models.Wallet{Address: from_address, Balance: 100000}
 	to_wallet := models.Wallet{Address: to_address, Balance: 500}
@@ -40,8 +40,8 @@ func TestSuccessfulTransfer(t *testing.T) {
 	db.DB.Where("address = ?", from_address).Delete(&models.Wallet{})
 	db.DB.Where("address = ?", to_address).Delete(&models.Wallet{})
 
-	// assert.Error(t, db.DB.Where("address = ?", from_address).First(&models.Wallet{}).Error)
-	// assert.Error(t, db.DB.Where("address = ?", to_address).First(&models.Wallet{}).Error)
+	assert.Error(t, db.DB.Where("address = ?", from_address).First(&models.Wallet{}).Error)
+	assert.Error(t, db.DB.Where("address = ?", to_address).First(&models.Wallet{}).Error)
 }
 
 func TestFailedTransfer(t *testing.T) {
@@ -51,11 +51,11 @@ func TestFailedTransfer(t *testing.T) {
 	resolver := &graph.Resolver{}
 	var err error
 
+	assert.Error(t, db.DB.Where("address = ?", from_address).First(&models.Wallet{}).Error)
+	assert.Error(t, db.DB.Where("address = ?", to_address).First(&models.Wallet{}).Error)
+
 	_, err = resolver.Mutation().Transfer(context.TODO(), from_address, to_address, 7)
 	assert.Error(t, err)
-
-	// assert.Error(t, db.DB.Where("address = ?", from_address).First(&models.Wallet{}).Error)
-	// assert.Error(t, db.DB.Where("address = ?", to_address).First(&models.Wallet{}).Error)
 
 	from_wallet := models.Wallet{Address: from_address, Balance: 10}
 	to_wallet := models.Wallet{Address: to_address, Balance: 500}
@@ -80,6 +80,6 @@ func TestFailedTransfer(t *testing.T) {
 	db.DB.Where("address = ?", from_address).Delete(&models.Wallet{})
 	db.DB.Where("address = ?", to_address).Delete(&models.Wallet{})
 
-	// assert.Error(t, db.DB.Where("address = ?", from_address).First(&models.Wallet{}).Error)
-	// assert.Error(t, db.DB.Where("address = ?", to_address).First(&models.Wallet{}).Error)
+	assert.Error(t, db.DB.Where("address = ?", from_address).First(&models.Wallet{}).Error)
+	assert.Error(t, db.DB.Where("address = ?", to_address).First(&models.Wallet{}).Error)
 }

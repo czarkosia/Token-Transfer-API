@@ -37,6 +37,14 @@ func (r *mutationResolver) Transfer(ctx context.Context, fromAddress string, toA
 	var to_wallet models.Wallet
 	err = tx.Where("address = ?", toAddress).First(&to_wallet).Error
 	if err != nil {
+		to_wallet = models.Wallet{Address: toAddress, Balance: 0}
+		if err := tx.Create(&to_wallet).Error; err != nil {
+			tx.Rollback()
+			return from_wallet.Balance, err
+		}
+	}
+	err = tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("address = ?", toAddress).First(&to_wallet).Error
+	if err != nil {
 		tx.Rollback()
 		return 0, err
 	}
