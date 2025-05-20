@@ -2,18 +2,27 @@ package db
 
 import (
 	"log"
+	"os"
 
 	"token-transfer-api/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var DB *gorm.DB
 
 func DBconnect() {
 	dsn := "host=postgres user=btp password=btp dbname=btp_db port=5432 sslmode=disable TimeZone=Europe/Warsaw"
-	gormDB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	gormDB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		Logger: logger.New(
+			log.New(os.Stdout, "\r\n[GORM] ", log.LstdFlags),
+			logger.Config{
+				IgnoreRecordNotFoundError: true,
+			},
+		),
+	})
 
 	if err != nil {
 		log.Fatalf("failed to connect database: %v", err)
